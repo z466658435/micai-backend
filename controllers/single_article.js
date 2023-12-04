@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import geoip from 'geoip-lite'
 
 
-
+//访问文章阅读量加1
 export const readingsADD = (req, res) => {
   const articleID = req.params.id
   const q = `UPDATE post SET readings = readings + 1 WHERE id = ?`
@@ -15,6 +15,7 @@ export const readingsADD = (req, res) => {
   })
 }
 
+//点赞 点赞数量加1
 export const likesADD = (req, res) => {
   const articleID = req.params.id
   const user_id = parseInt(req.params.user_id)
@@ -51,6 +52,7 @@ export const likesADD = (req, res) => {
   })
 }
 
+//取消点赞 点赞数减1
 export const likesDELETE = (req, res) => {
   const articleID = req.params.id
   const user_id = parseInt(req.params.user_id)
@@ -88,6 +90,7 @@ export const likesDELETE = (req, res) => {
   })
 }
 
+//获取评论
 export const get_comments = (req, res) => {
   // console.log(req.params)
   const post_id = req.params.post_id
@@ -157,6 +160,7 @@ export const get_comments = (req, res) => {
   })
 }
 
+//评论 评论数加1
 export const commentsADD = (req, res) => {
   const values = [
     req.body.user_uuid,
@@ -185,6 +189,7 @@ export const commentsADD = (req, res) => {
   })
 }
 
+//删除评论 评论数减1
 export const commentsDELETE = (req, res) => {
   const comment_id = req.params.id
   const post_id = req.query.post_id
@@ -204,6 +209,7 @@ export const commentsDELETE = (req, res) => {
   })
 }
 
+//子评论 评论数加1
 export const child_commentsADD = (req, res) => {
   console.log(21321)
   const values = [
@@ -231,6 +237,7 @@ export const child_commentsADD = (req, res) => {
   })
 }
 
+//删除子评论 评论数减1
 export const child_commentsDELETE = (req, res) => {
   const child_comment_id = req.params.id
   const post_id = req.query.post_id

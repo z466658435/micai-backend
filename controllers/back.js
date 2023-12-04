@@ -146,23 +146,22 @@ export const getmemfile = (req, res) => {  //管理员拿到所有个人信息
 
 
 export const deletememfile = (req, res) => {  //管理员删除个人账号    
-  const q0 = `SELECT uuid FROM user WHERE id = ?`
-  db.query(q0, [req.params.id], (err, data) => {
-    if (err) return res.status(500).json(err)
-    const user_uuid = data[0].uuid
-    const q = `DELETE FROM user WHERE id = ?`
-    db.query(q, [req.params.id], (err, data) => {
-      if (err) return res.status(500).json(err)
-      const q1 = `DELETE FROM photo WHERE user_uuid = ?`
-      db.query(q1, [user_uuid], (err, data) => {
-        if (err) return res.status(500).json(err)
-        const dir = `./public/uploads/${req.params.id}`
-        if (fs.existsSync(dir)) fs.rmdirSync(dir, { recursive: true })
-        return res.status(200).json("账号删除成功~")
-      })
-    })
+  const q = `
+    DELETE u, p
+    FROM user AS u
+    LEFT JOIN photo AS p ON u.uuid = p.user_uuid
+    WHERE u.id = ?;
+  `
+  db.query(q, [req.params.id], (err, data) => {
+    if (err) {
+      return res.status(500).json(err)
+    }
+    const dir = `./public/uploads/${req.params.id}`
+    if (fs.existsSync(dir)) {
+      fs.rmdirSync(dir, { recursive: true })
+    }
+    return res.status(200).json("账号删除成功~")
   })
-
 }
 
 

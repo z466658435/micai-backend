@@ -3,19 +3,19 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import geoip from 'geoip-lite'
 import nodemailer from "nodemailer"
+import {email_authorize_code,email_username} from "../config.js"
 
 
 
 //发送邮件（注册及修改密码模块）
-
 const transporter = nodemailer.createTransport({
   host: "smtp.qq.com",
   port: 465,
   secure: true,
   auth: {
     // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-    user: "2485436383@qq.com",
-    pass: "gfzamawijemmeaeh",
+    user: email_username,
+    pass: email_authorize_code,
   },
 })
 
@@ -25,6 +25,7 @@ const randomSixDigitNumber = () => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+//发邮件
 export const email = async (req, res) => {
   const emailAddress = req.params.emailAddress
   const randomCode = randomSixDigitNumber()
@@ -58,7 +59,7 @@ export const email = async (req, res) => {
   }
 }
 
-
+//注册
 export const register = (req, res) => {
   console.log(req.body)
   const q = "SELECT * FROM user WHERE username=?"
@@ -151,7 +152,8 @@ export const register = (req, res) => {
   })
 }
 
-export const modify = (req, res) => {
+//修改密码
+export const modify_password = (req, res) => {
   console.log(req.body)
   const q = "SELECT * FROM user WHERE username=?"
   db.query(q, [req.body.username], (err, data) => {
@@ -213,6 +215,7 @@ export const modify = (req, res) => {
   })
 }
 
+//登录
 export const login = (req, res) => {
   const q = "SELECT * FROM user WHERE username=?"
   db.query(q, [req.body.username], (err, data) => {
@@ -240,6 +243,7 @@ export const login = (req, res) => {
 
 }
 
+//登出
 export const logout = (req, res) => {
   res.clearCookie("access_token", {
     sameSite: 'none',
@@ -247,6 +251,7 @@ export const logout = (req, res) => {
   }).status(200).json("用户登出")
 }
 
+//移除licalStorage
 export const localStorage_remove = (req, res) => {
   const cookies = req.headers.cookie
   if (cookies && cookies.includes('access_token')) {

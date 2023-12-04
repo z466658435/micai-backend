@@ -18,6 +18,7 @@ export const getsingle = (req, res) => {
   })
 }
 
+//获取个人头像
 export const getavatar = (req, res) => {
   const imageName = req.params.imageName
   const qid = `SELECT id FROM user
@@ -33,6 +34,7 @@ export const getavatar = (req, res) => {
   })
 }
 
+//获取个人图片
 export const getphoto = (req, res) => {
   const imageName = req.params.imageName
   const qid = `SELECT user.id FROM user
