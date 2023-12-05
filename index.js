@@ -12,6 +12,8 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { db } from "./db.js"
 import geoip from 'geoip-lite'
+import WebSocketServer from './websocket.js'
+import cors from "cors";
 
 //检查封禁IP 使跳转403
 const checkBanList = (req, res, next) => {
@@ -30,7 +32,9 @@ const checkBanList = (req, res, next) => {
 }
 
 const app = express()
+WebSocketServer()
 
+app.use(cors()) // 使用 CORS 中间件，允许所有来源的请求
 app.use(express.json())
 app.use(cookieParser())
 app.use(checkBanList)// 将中间件应用到所有路由 检查封禁IP

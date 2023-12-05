@@ -1,6 +1,8 @@
+import path from "path"
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import { db } from "../db.js"
 import geoip from 'geoip-lite'
-
 
 //Home主页信息渲染 主要为echarts和访问日志统计
 export const get_firstpage_data = (req, res) => {
