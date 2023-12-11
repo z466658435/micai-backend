@@ -7,7 +7,6 @@ export const db = mysql.createConnection({
   password: db_password,
   database: db_database
 })
-
 var ifcreate_invitecode = 1
 
 function createTable (tableName, createSQL) {
