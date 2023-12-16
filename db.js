@@ -5,7 +5,7 @@ export const db = mysql.createConnection({
   host: db_host,
   user: db_user,
   password: db_password,
-  database: db_database 
+  database: db_database
 })
 var ifcreate_invitecode = 1
 
@@ -53,7 +53,7 @@ db.connect(async function (err) {
       img VARCHAR(255) DEFAULT NULL,
       name VARCHAR(60) DEFAULT NULL,
       gender ENUM('0', '1') DEFAULT NULL,
-      date DATE DEFAULT NULL,
+      date DATE DEFAULT '2000-01-01',
       nativePlace VARCHAR(30) DEFAULT NULL,
       college VARCHAR(60) DEFAULT NULL,
       major VARCHAR(60) DEFAULT NULL,

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { db } from "../db.js"
 import geoip from 'geoip-lite'
+import sharp from 'sharp'
 
 //Home主页信息渲染 主要为echarts和访问日志统计
 export const get_firstpage_data = (req, res) => {
@@ -157,4 +158,37 @@ export const get_articlepage_data = (req, res) => {
       return res.status(200).json(data)
     })
   }
+}
+
+
+//成员页获取照片板块信息
+export const get_memberpage_carousel = (req, res) => {
+  const imageBuffers = [] // 用于存储所有的 Buffer 对象
+  const qid = `SELECT user_uuid,img FROM photo ORDER BY RAND() LIMIT 5` //随机选取五张照片
+  db.query(qid, [], (err, data) => {
+    if (err) return res.status(500).json(err)
+    data.map((item) => {
+      const qid = `SELECT id FROM user WHERE uuid = ?`
+      db.query(qid, [item.user_uuid], (err, data1) => {
+        if (err) return res.status(500).json(err)
+        const userId = data1[0].id
+        const imagePath = path.join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'uploads', `${userId}`, 'photos', item.img)
+
+        // 使用 sharp 读取图片并生成 Buffer 对象
+        sharp(imagePath)
+          .toBuffer()
+          .then((fileData) => {
+            imageBuffers.push(fileData) // 将 Buffer 对象添加到数组中
+
+            if (imageBuffers.length === data.length) {
+              // 当所有 Buffer 对象都获取完成时，发送到前端
+              return res.status(200).json(imageBuffers)
+            }
+          })
+          .catch((sharpErr) => {
+            return res.status(500).json({ error: '获取失败', sharpError: sharpErr.message })
+          })
+      })
+    })
+  })
 }

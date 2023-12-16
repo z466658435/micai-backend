@@ -5,6 +5,12 @@ import fs, { access } from 'fs'
 import geoip from 'geoip-lite'
 
 
+function formatDateToYearMonth (dateString) {
+  const dateObject = new Date(dateString)
+  const year = dateObject.getFullYear()
+  const month = dateObject.getMonth() + 1 // 月份是从0开始的，所以要加1
+  return `${year}-${month.toString().padStart(2, "0")}`
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 //普通用户
 export const getback = (req, res) => {  //拿到个人信息
@@ -28,14 +34,18 @@ export const getback = (req, res) => {  //拿到个人信息
       WHERE id=?`
       db.query(q, [req.params.id], (err, data) => {
         if (err) return res.status(500).json(err)
-        // console.log(data[0])
-        return res.status(200).json(data[0])
+        const sanitizedData = data.map((item) => {
+          const { date, ...other } = item
+          const yearMonth = formatDateToYearMonth(date)
+          return { ...other, date: yearMonth }
+        })
+        console.log(sanitizedData[0])
+        return res.status(200).json(sanitizedData[0])
       })
     } else {
       return res.status(403).json('用户ID匹配无效，无访问权限')
     }
   })
-
 }
 
 export const updateback = (req, res) => {  //更新个人信息
@@ -107,12 +117,6 @@ export const deletephotoback = (req, res) => {  //删除照片墙照片
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //管理员操作
-function formatDateToYearMonth (dateString) {
-  const dateObject = new Date(dateString)
-  const year = dateObject.getFullYear()
-  const month = dateObject.getMonth() + 1 // 月份是从0开始的，所以要加1
-  return `${year}-${month.toString().padStart(2, "0")}`
-}
 
 export const getmemfile = (req, res) => {  //管理员拿到所有个人信息
   const name = req.params.name

@@ -128,17 +128,11 @@ storage = multer.diskStorage({
     //type为0是发表新文章 为1是编辑 需要删除原来的图片
     if (req.params.type == 1) {
       const filePathToDelete = `${dir}/${req.params.file_name}`
-      console.log(666666666666)
-      console.log(666666666666)
-      console.log(666666666666)
-      console.log(666666666666)
-      console.log(req.params.type)
-      console.log(req.params.file_name)
-      console.log(filePathToDelete)
-      console.log(666666666666)
-      console.log(666666666666)
-      console.log(666666666666)
-      console.log(666666666666)
+      // console.log(666666666666)
+      // console.log(req.params.type)
+      // console.log(req.params.file_name)
+      // console.log(filePathToDelete)
+      // console.log(666666666666)
       if (fs.existsSync(filePathToDelete)) fs.unlinkSync(filePathToDelete)
     }
 
